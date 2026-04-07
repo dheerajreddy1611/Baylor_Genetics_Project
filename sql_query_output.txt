@@ -1,0 +1,31 @@
+Query 1: HGNC ID and disease connection
+---------------------------------------
+SELECT
+    g.hgnc_id,
+    g.gene_symbol,
+    d.disease_name,
+    d.source_context
+FROM genes g
+LEFT JOIN disease_associations d ON g.id = d.gene_id
+ORDER BY g.hgnc_id;
+RESULTS:
+('HGNC:11621', 'HNF1A', 'Disease', 'Extracted from paper')
+('HGNC:13394', 'NPHS2', 'Disease', 'Extracted from paper')
+('HGNC:19903', 'RRAGD', 'Disease', 'Extracted from paper')
+('HGNC:2204', 'COL4A3', 'Disease', 'Extracted from paper')
+
+Query 2: Gene name and all aliases
+----------------------------------
+SELECT
+    g.hgnc_id,
+    g.gene_symbol,
+    GROUP_CONCAT(a.alias, ' | ') AS all_aliases
+FROM genes g
+LEFT JOIN gene_aliases a ON g.id = a.gene_id
+GROUP BY g.id, g.hgnc_id, g.gene_symbol
+ORDER BY g.gene_symbol;
+RESULTS:
+('HGNC:2204', 'COL4A3', None)
+('HGNC:11621', 'HNF1A', 'HNF1 | HNF1α | LFB1')
+('HGNC:13394', 'NPHS2', 'PDCN | SRN1')
+('HGNC:19903', 'RRAGD', 'DKFZP761H171 | bA11D8.2.1')
